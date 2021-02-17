@@ -38,6 +38,10 @@
       "background/moment.min.js",
       "background/turndown.js",
       "/background/Readability.js",
+      "classes/logger.js",
+      "classes/options.js",
+      "background/menus.js",
+      "classes/markdown-clipper.js",
       "background/background.js"
     ]
   },

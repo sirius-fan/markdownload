@@ -40,22 +40,21 @@
             <code>:</code>, <code>*</code>, <code>|</code>, <code>"</code>)</label>
         <input type="text" id="disallowedChars" name="disallowedChars" role="textbox" />
     </div>
+
+    <h3>Front/back template</h3>
+    <div class="checkbox-container">
+        <input name="includeTemplate" id="includeTemplate" type="checkbox" />
+        <label for="includeTemplate">Append front/back template to clipped text</label>
+    </div>
     
-    <h3>Front-matter template</h3>
-    <div class="textbox-container">
+    <div class="textbox-container" id="frontmatter-container">
         <label for="frontmatter">Enter the text here that should appear at the top of the output file.</label> <br />
         <div class="input-sizer"><textarea name="frontmatter" id="frontmatter" class="textarea" role="textbox"></textarea></div>
     </div>
 
-    <h3>Back-matter template</h3>
-    <div class="textbox-container">
+    <div class="textbox-container" id="backmatter-container">
         <label for="backmatter">Enter the text here that should appear at the bottom of the output file.</label> <br />
         <div class="input-sizer"><textarea name="backmatter" id="backmatter" class="textarea" role="textbox"></textarea></div>
-    </div>
-
-    <div class="checkbox-container">
-        <input name="includeTemplate" id="includeTemplate" type="checkbox" />
-        <label for="includeTemplate">Append front/back template to clipped text</label>
     </div>
 
     <hr>
@@ -275,6 +274,7 @@ const helloWorld = () => {
     <div id="spinner" style="display: none;"></div>
 
     <script src="../browser-polyfill.min.js"></script>
+    <script src="../common/options.js"></script>
     <script src="options.js"></script>
 </body>
 
