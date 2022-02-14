@@ -119,3 +119,24 @@ function downloadImage(filename, url) {
     }
     */
 }
+
+function obsidianNew(vault, file, pathType, content) {
+    const v = vault || 'obsidian'
+    const f = file || 'Webclip'
+    const c = content || "Unable get contents of the clip"
+    const p = pathType || 'name'
+
+    const uri = `obsidian://new?vault=${v}&${p}=${f}&content=${c}`
+
+    if (uri.length > 30000) {
+        copyToClipboard(decodeURI(c));
+        alert('WARNING: The content is too long to be sent to obsidian directly.\n\n'
+            + 'The content has been copied to your clipboard.\n\n'
+            + 'Please paste it into Obsidian after it opens the new file for you.')
+        window.location.href = `obsidian://new?vault=${v}&${p}=${f}&content=**REMEMBER TO PASTE YOUR CONTENT HERE**`
+    }
+    else {
+        // Redirect to open obsidian
+        window.location.href = `obsidian://new?vault=${v}&${p}=${f}&content=${c}`
+    }
+}

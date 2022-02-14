@@ -365,24 +365,23 @@ async function downloadMarkdown(markdown, title, tabId, imageList = {}, mdClipsF
       console.error("Download failed", err);
     }
   }
-  // // download via obsidian://new uri
-  // else if (options.downloadMode == 'obsidianUri') {
-  //   try {
-  //     await ensureScripts(tabId);
-  //     let uri = 'obsidian://new?';
-  //     uri += `${options.obsidianPathType}=${encodeURIComponent(title)}`;
-  //     if (options.obsidianVault) uri += `&vault=${encodeURIComponent(options.obsidianVault)}`;
-  //     uri += `&content=${encodeURIComponent(markdown)}`;
-  //     let code = `window.location='${uri}'`;
-  //     await browser.tabs.executeScript(tabId, {code: code});
-  //   }
-  //   catch (error) {
-  //     // This could happen if the extension is not allowed to run code in
-  //     // the page, for example if the tab is a privileged page.
-  //     console.error("Failed to execute script: " + error);
-  //   };
+  // download via obsidian://new uri
+  else if (options.downloadMode == 'obsidianUri') {
+    console.log('obsidianUri')
+    try {
+      await ensureScripts(tabId);
+      
+      let code = `obsidianNew("${encodeURIComponent(options.obsidianVault)}", "${encodeURIComponent(title)}", "${options.obsidianPathType}", "${encodeURIComponent(markdown)}")`;
+      console.log(code)
+      await browser.tabs.executeScript(tabId, {code: code});
+    }
+    catch (error) {
+      // This could happen if the extension is not allowed to run code in
+      // the page, for example if the tab is a privileged page.
+      console.error("Failed to execute script: " + error);
+    };
     
-  // }
+  }
   // download via content link
   else {
     try {
