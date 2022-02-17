@@ -255,7 +255,7 @@ async function convertArticleToMarkdown(article, downloadImages = null) {
     .split('/').map(s=>generateValidFileName(s, options.disallowedChars)).join('/');
 
   let result = turndown(article.content, options, article);
-  if (options.downloadImages && options.downloadMode == 'downloadsApi') {
+  if (options.downloadImages && options.downloadMode != 'contentLink') {
     // pre-download the images
     result = await preDownloadImages(result.imageList, result.markdown);
   }
@@ -350,7 +350,6 @@ async function downloadMarkdown(markdown, title, tabId, imageList = {}, mdClipsF
   
   // download via the downloads API
   if (options.downloadMode == 'downloadsApi' && browser.downloads) {
-    
     // create the object url with markdown data as a blob
     const url = URL.createObjectURL(new Blob([markdown], {
       type: "text/markdown;charset=utf-8"
@@ -406,8 +405,20 @@ async function downloadMarkdown(markdown, title, tabId, imageList = {}, mdClipsF
   //   };
     
   // }
+  else if(browser.runtime.sendNativeMessage /*&& options.downloadMode == 'nativeMessaging'*/){
+    console.log("SEND NATIVE MESSAGE")
+    const response = await browser.runtime.sendNativeMessage("application.id", {
+      type: "download.markdown",
+      markdown,
+      title,
+      mdClipsFolder,
+      imageList
+    });
+    console.log("response", response)
+  }
   // download via content link
   else {
+    console.log(options.downloadMode, browser.runtime.sendNativeMessage)
     try {
       await ensureScripts(tabId);
       const filename = mdClipsFolder + generateValidFileName(title, options.disallowedChars) + ".md";
@@ -654,7 +665,7 @@ async function formatMdClipsFolder(article) {
   let options = await getOptions();
 
   let mdClipsFolder = '';
-  if (options.mdClipsFolder && options.downloadMode == 'downloadsApi') {
+  if (options.mdClipsFolder && options.downloadMode != 'contentLink') {
     mdClipsFolder = textReplace(options.mdClipsFolder, article, options.disallowedChars);
     mdClipsFolder = mdClipsFolder.split('/').map(s => generateValidFileName(s, options.disallowedChars)).join('/');
     if (!mdClipsFolder.endsWith('/')) mdClipsFolder += '/';

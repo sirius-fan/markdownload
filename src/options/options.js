@@ -69,12 +69,12 @@ const setCurrentChoice = result => {
     // if browser doesn't support the download api (i.e. Safari)
     // we have to use contentLink download mode
     if (!browser.downloads) {
-        options.downloadMode = 'contentLink';
-        document.querySelectorAll("[name='downloadMode']").forEach(el => el.disabled = true)
+        if(options.downloadMode == 'downloadsApi') options.downloadMode = 'contentLink';
+        document.querySelector("#downloadsApi").disabled = true
         document.querySelector('#downloadMode p').innerText = "The Downloas API is unavailable in this browser."
     }
 
-    const downloadImages = options.downloadImages && options.downloadMode == 'downloadsApi';
+    const downloadImages = options.downloadImages && options.downloadMode != 'contentLink';
 
     if (!downloadImages && (options.imageStyle == 'markdown' || options.imageStyle.startsWith('obsidian'))) {
         options.imageStyle = 'originalSource';
@@ -132,19 +132,19 @@ const show = (el, show) => {
 
 const refereshElements = () => {
     document.getElementById("downloadModeGroup").querySelectorAll('.radio-container,.checkbox-container,.textbox-container').forEach(container => {
-        show(container, options.downloadMode == 'downloadsApi')
+        show(container, options.downloadMode != 'contentLink')
     });
 
     // document.getElementById("obsidianUriGroup").querySelectorAll('.radio-container,.checkbox-container,.textbox-container').forEach(container => {
     //     show(container, options.downloadMode == 'obsidianUri')
     // });
-    show(document.getElementById("mdClipsFolder"), options.downloadMode == 'downloadsApi');
+    show(document.getElementById("mdClipsFolder"), options.downloadMode != 'contentLink');
 
     show(document.getElementById("linkReferenceStyle"), (options.linkStyle == "referenced"));
 
     show(document.getElementById("fence"), (options.codeBlockStyle == "fenced"));
 
-    const downloadImages = options.downloadImages && options.downloadMode == 'downloadsApi';
+    const downloadImages = options.downloadImages && options.downloadMode != 'contentLink';
 
     show(document.getElementById("imagePrefix"), downloadImages);
 
