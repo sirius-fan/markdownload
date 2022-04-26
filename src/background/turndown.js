@@ -113,6 +113,57 @@ var TurndownService = (function () {
     }
   };
 
+  rules.math_formula ={
+    // filter: 'math',
+    filter: 'mrow',
+    
+    replacement: function (content, node) {
+      return ''
+      // var parent = node.parentNode;
+      // if (parent.nodeName === 'LI' && parent.lastElementChild === node) {
+      //   return '\n' + content
+      // } else {
+      //   return '\n\n' + content + '\n\n'
+      // }
+    }
+  };
+
+    rules.math_formula1 ={
+    // filter: 'math',
+    filter: 'annotation',
+    
+    replacement: function (content, node) {
+      return '$'+content+'$'
+      // var parent = node.parentNode;
+      // if (parent.nodeName === 'LI' && parent.lastElementChild === node) {
+      //   return '\n' + content
+      // } else {
+      //   return '\n\n' + content + '\n\n'
+      // }
+    }
+  };
+
+    rules.math_formula2 ={
+    // filter: 'span',
+    filter: function (node) {
+      return (
+        node.nodeName === 'SPAN' &&
+        // node.getAttribute('class') === "katex-html"
+        node.getAttribute("class")==="katex-html"
+      )
+    },
+
+    replacement: function (content, node) {
+      return ''
+      // var parent = node.parentNode;
+      // if (parent.nodeName === 'LI' && parent.lastElementChild === node) {
+      //   return '\n' + content
+      // } else {
+      //   return '\n\n' + content + '\n\n'
+      // }
+    }
+  };
+
   rules.blockquote = {
     filter: 'blockquote',
 
@@ -652,7 +703,8 @@ var TurndownService = (function () {
 
   function Node(node, options) {
     node.isBlock = isBlock(node);
-    node.isCode = node.nodeName === 'CODE' || node.parentNode.isCode;
+    node.isCode = node.nodeName === 'CODE' || node.parentNode.isCode; 
+    // node.isCode = node.nodeName === 'CODE' || node.parentNode.isCode || node.nodeName === 'annotation';
     node.isBlank = isBlank(node);
     node.flankingWhitespace = flankingWhitespace(node, options);
     return node
@@ -880,6 +932,10 @@ var TurndownService = (function () {
     var self = this;
     return reduce.call(parentNode.childNodes, function (output, node) {
       node = new Node(node, self.options);
+
+      if (node.nodeName === 'annotation'){
+        node.isCode=true;
+      }
 
       var replacement = '';
       if (node.nodeType === 3) {
