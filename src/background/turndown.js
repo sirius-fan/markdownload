@@ -113,56 +113,23 @@ var TurndownService = (function () {
     }
   };
 
+
   rules.math_formula ={
-    // filter: 'math',
-    filter: 'mrow',
-    
-    replacement: function (content, node) {
-      return ''
-      // var parent = node.parentNode;
-      // if (parent.nodeName === 'LI' && parent.lastElementChild === node) {
-      //   return '\n' + content
-      // } else {
-      //   return '\n\n' + content + '\n\n'
-      // }
-    }
-  };
-
-    rules.math_formula1 ={
-    // filter: 'math',
-    filter: 'annotation',
-    
-    replacement: function (content, node) {
-      return '$'+content+'$'
-      // var parent = node.parentNode;
-      // if (parent.nodeName === 'LI' && parent.lastElementChild === node) {
-      //   return '\n' + content
-      // } else {
-      //   return '\n\n' + content + '\n\n'
-      // }
-    }
-  };
-
-    rules.math_formula2 ={
-    // filter: 'span',
     filter: function (node) {
+      var math_classes=["mwe-math-element", "katex"]
       return (
         node.nodeName === 'SPAN' &&
-        // node.getAttribute('class') === "katex-html"
-        node.getAttribute("class")==="katex-html"
+        math_classes.indexOf(node.getAttribute("class"))!=-1
       )
     },
 
     replacement: function (content, node) {
-      return ''
-      // var parent = node.parentNode;
-      // if (parent.nodeName === 'LI' && parent.lastElementChild === node) {
-      //   return '\n' + content
-      // } else {
-      //   return '\n\n' + content + '\n\n'
-      // }
+      var latex_nodes = node.getElementsByTagName("annotation")
+      return '$'+latex_nodes[0].textContent+'$'
+
     }
   };
+
 
   rules.blockquote = {
     filter: 'blockquote',
